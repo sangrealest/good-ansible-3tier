@@ -1,9 +1,9 @@
 ---
 
-- hosts: jumpbox
-  gather_facts: false
-  roles:
-    - {name: osp-facts, when: ansible_product_name ==  'OpenStack Compute'}
+#- hosts: jumpbox
+#  gather_facts: false
+#  roles:
+#    - {name: osp-facts, when: ansible_product_name ==  'OpenStack Compute'}
 # Setup front-end load balancer tier
 
 
@@ -11,8 +11,12 @@
   hosts: frontends
   become: yes
   roles:
-    - {name: base-config, tags: base-config}
-    - {name: lb-tier, tags: [lbs, haproxy]}
+    - role: base-config
+      tags: base-config
+    - role: lb-tier
+      tags: 
+        - lbs
+        - haproxy
 
 # Setup application servers tier
 
@@ -21,8 +25,12 @@
   become: yes
   gather_facts: false
   roles:
-    - {name: base-config, tags: base-config}
-    - {name: app-tier, tags: [apps, tomcat]}
+    - role: base-config
+      tags: base-config
+    - role: app-tier
+      tags: 
+        - apps
+        - tomcat
 
 # Setup database tier
 
@@ -30,6 +38,10 @@
   become: yes
   hosts: appdbs
   roles:
-    - {name: base-config, tags: base-config}
-    - {name: geerlingguy.postgresql, tags: [dbs, postgres]}
+    - role: base-config
+      tags: base-config
+    - role: geerlingguy.postgresql
+      tags: 
+        - dbs
+        - postgres
 
